@@ -8,7 +8,7 @@ exports.ScorePost = async (ctx) => {
     const { body } = ctx.request;
 
     // Check input JSON schema with Joi
-    // Inputs: TransactionId, UserId, CurrencyAmount, Verifier
+    // Inputs: UserId, LeaderboardId, Score
     const schema = Joi.object({
         UserId: Joi.number().required(),
         LeaderboardId: Joi.number().required(),
@@ -32,9 +32,17 @@ exports.ScorePost = async (ctx) => {
     }
 
     // get ranks
-    const ranking =  await Leaderboard.GetRank(LeaderboardId, UserId);
-    console.log(ranking)
+    const ranking =  await Leaderboard.GetData(LeaderboardId, UserId);
+    console.log(ranking);
 
     // return Success
-    response.successWithData2(ctx, ranking);
+    response.successWithData(ctx, ranking);
+}
+
+
+// 5. Leaderboard Get
+exports.LeaderboardGet = async (ctx) => {
+    // const { body } = ctx.request;
+
+    response.success(ctx)
 }

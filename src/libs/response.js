@@ -13,7 +13,6 @@ exports.success = (ctx) => {
     }
 }
 
-
 exports.successWithData = (ctx, resultData) => {
     
     ctx.status = 200;
