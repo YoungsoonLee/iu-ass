@@ -10,7 +10,7 @@ exports.UserSave = async (ctx) => {
     const { body } = ctx.request;
 
     // Check input JSON schema with Joi
-    // Inputs: UserId
+    // Inputs: UserId, Data
     const schema = Joi.object({
         UserId: Joi.number().required(),
         Data: Joi.object().required()
@@ -33,4 +33,32 @@ exports.UserSave = async (ctx) => {
 
     // return Success
     response.success(ctx);
+}
+
+
+// 7. User Load
+exports.UserLoad = async (ctx) => {
+    const { body } = ctx.request;
+
+    // Check input JSON schema with Joi
+    // Inputs: UserId
+    const schema = Joi.object({
+        UserId: Joi.number().required()
+      });
+    const resultCheckSchema = Joi.validate(body, schema);
+    
+    // error schema of iput JSON
+    if(resultCheckSchema.error) {
+        response.error(ctx,400, resultCheckSchema.error.details[0].message);
+        return;
+    }
+
+    const {UserId} = body;
+    // get user
+    const user =  await User.Load(UserId);
+    console.log(user)
+
+    // return Success
+    response.successWithData(ctx, user);
+
 }

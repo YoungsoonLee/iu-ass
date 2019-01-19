@@ -31,12 +31,11 @@ exports.successWithData = (ctx, resultData) => {
           break;
         case '/ScorePost':
           // code block
-          ctx.body = {
-            "UserId": resultData.UserId,
-            "LeaderboardId": resultData.LeaderboardId,
-            "Score": resultData.Score,
-            "Rank": resultData.Rank
-          }
+          ctx.body = resultData
+          break;
+        case '/UserLoad':
+          // code block
+          ctx.body = resultData
           break;
         default:
           // code block

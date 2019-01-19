@@ -1,3 +1,4 @@
+/* eslint-disable no-const-assign */
 /* eslint-disable guard-for-in */
 /* eslint-disable consistent-return */
 /* eslint-disable no-restricted-syntax */
@@ -43,6 +44,22 @@ User.statics.Save = async function(UserId, Data) {
             user.save();
         }
     });
+}
+
+
+// Get Rank of UserId 
+User.statics.Load = async function(UserId) {
+    
+    const doc = await this.collection.findOne({UserId}); 
+    // let resultData = {}
+    if (doc) {
+        return doc.Data
+    // eslint-disable-next-line no-else-return
+    }else{
+        return {}
+    }
+
+    // return resultData
 }
 
 export default mongoose.model('User', User)
