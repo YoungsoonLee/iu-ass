@@ -1,9 +1,7 @@
 import Joi from 'joi'
-import sha1 from 'node-sha1'
-
 import Transaction from '../../../models/transaction'
-import config from '../../../config'
 import response from '../../../libs/response'
+import libs from '../../../libs/common'
 
 // 2. Transaction Recording
 exports.postTransaction = async (ctx) => {
@@ -28,8 +26,7 @@ exports.postTransaction = async (ctx) => {
     const { TransactionId, UserId, CurrencyAmount, Verifier} = body;
     // check duplicate TransactionId
     try {
-        // TODO: seperate
-        const count = await Transaction.collection.count({TransactionId})
+        const count = await Transaction.CountByTransactionId(TransactionId);
         if(count !== 0) {
             response.error(ctx,400, 'already exist TransactionId');
             return;
@@ -40,19 +37,14 @@ exports.postTransaction = async (ctx) => {
     }
 
     // check Verifier
-    // use node-sha1 for verifying hash
-    // TODO: seperate
-    const hashedData = sha1(config.secret+TransactionId+UserId+CurrencyAmount);
-    console.log(hashedData)
-    if (hashedData !== Verifier) {
+    if(!libs.compareHash(TransactionId, UserId, CurrencyAmount, Verifier)) {
         response.error(ctx,400, 'invalid Verifier');
         return;
     }
 
     // Save
     try {
-        // TODO: seperate
-        await new Transaction({TransactionId, UserId, CurrencyAmount}).save();
+        await Transaction.CreateTransaction(TransactionId, UserId, CurrencyAmount);
     } catch (e) {
         response.error(ctx,500, e.message);
         return;
@@ -84,20 +76,7 @@ exports.postTransactionStats = async (ctx) => {
     // Transaction Data querying
     let resultData = null;
     try {
-        // TODO: serperate
-        resultData = await Transaction.aggregate([
-            { $match: {
-                UserId
-            }},
-            { 
-                $group: { 
-                    _id: "$UserId",
-                    TransactionCount: { $sum: 1 },
-                    CurrencySum: { $sum: "$CurrencyAmount" }
-                }
-            }
-        ]);
-
+       resultData = await Transaction.getTransactionData(UserId)
     }catch (e) {
         response.error(ctx,500, e.message);
         return;
