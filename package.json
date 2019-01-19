@@ -1,27 +1,9 @@
 {
-  "name": "koa-restful-boilerplate",
-  "description": "Koa 2 RESTful API boilerplate",
+  "name": "iugo",
+  "description": "iuo assessment by Ted",
   "version": "1.0.0",
-  "author": "Thomas Blanc-Hector",
-  "keywords": [
-    "koa",
-    "rest",
-    "api",
-    "mongodb",
-    "mongoose",
-    "async",
-    "es7"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jsnomad/koa-restful-boilerplate.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jsnomad/koa-restful-boilerplate/issues"
-  },
-  "homepage": "https://github.com/jsnomad/koa-restful-boilerplate#readme",
-  "main": "server/index.js",
+  "author": "Ted",
+  "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/ --exec babel-node",
     "build": "babel src -d dist",

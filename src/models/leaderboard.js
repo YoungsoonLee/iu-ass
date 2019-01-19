@@ -6,14 +6,14 @@ const Leaderboard = new mongoose.Schema({
     Score: { type: Number, required: true}
 })
 
+// unique index UserId and LeaderboardId
 Leaderboard.index({ UserId: 1, LeaderboardId: 1 }, { unique: true })
+// index Score for ranking
 Leaderboard.index({ Score: -1} );
 
 // save or update
 Leaderboard.statics.CreateOrUpdate = async function (UserId, LeaderboardId, Score) {
-    
     return this.findOneAndUpdate({UserId, LeaderboardId, Score: {$lte: Score}}, {$set: {Score}}, {upsert: true});
-    
 };
 
 // Get Rank of UserId 

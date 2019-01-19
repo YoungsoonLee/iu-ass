@@ -1,4 +1,4 @@
-// routes transaction
+// routes user
 import Router from 'koa-router';
 import userCtrl from './user.ctrl';
 

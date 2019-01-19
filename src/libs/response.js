@@ -1,3 +1,4 @@
+// for response error
 exports.error = (ctx, code, message) => {
     ctx.status = code;
     ctx.body = {
@@ -6,6 +7,7 @@ exports.error = (ctx, code, message) => {
     }
 }
 
+// for response success without any data
 exports.success = (ctx) => {
     ctx.status = 200;
     ctx.body = {
@@ -13,6 +15,7 @@ exports.success = (ctx) => {
     }
 }
 
+// for response success with data
 exports.successWithData = (ctx, resultData) => {
     
     ctx.status = 200;

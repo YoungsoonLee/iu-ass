@@ -1,4 +1,4 @@
-// routes transaction
+// routes leaderboard
 import Router from 'koa-router';
 import leaderboardCtrl from './leaderboard.ctrl';
 

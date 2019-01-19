@@ -1,7 +1,6 @@
 import Joi from 'joi'
 import Leaderboard from '../../../models/leaderboard'
 import response from '../../../libs/response'
-// import libs from '../../../libs/common'
 
 // 4. Leaderboard Score Posting
 exports.ScorePost = async (ctx) => {
@@ -23,17 +22,15 @@ exports.ScorePost = async (ctx) => {
     }
 
     const { UserId, LeaderboardId, Score} = body;
-    
     // save or update
     try{
        await Leaderboard.CreateOrUpdate(UserId, LeaderboardId, Score);
     }catch (e) {
-        // nothing
+        // do nothing
     }
 
-    // get ranks
+    // get ranking
     const ranking =  await Leaderboard.GetData(LeaderboardId, UserId);
-    console.log(ranking);
 
     // return Success
     response.successWithData(ctx, ranking);
@@ -43,6 +40,7 @@ exports.ScorePost = async (ctx) => {
 // 5. Leaderboard Get
 exports.LeaderboardGet = async (ctx) => {
     // const { body } = ctx.request;
-
+    // TODO: 
+    
     response.success(ctx)
 }

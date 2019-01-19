@@ -72,7 +72,6 @@ exports.postTransactionStats = async (ctx) => {
     }
 
     const { UserId } = body;
-    
     // Transaction Data querying
     let resultData = null;
     try {
@@ -82,6 +81,7 @@ exports.postTransactionStats = async (ctx) => {
         return;
     }
     
+    // Not exists UserId
     if (resultData.length === 0) {
         response.error(ctx,400, 'Not exists UserId');
         return;
