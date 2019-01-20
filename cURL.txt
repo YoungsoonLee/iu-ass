@@ -1,0 +1,74 @@
+1. Timestamp:
+    curl -X GET https://iugo-ted.herokuapp.com/Timestamp 
+
+2) Transaction Recording:
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/Transaction \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "TransactionId":201,
+        "UserId":3,
+        "CurrencyAmount":4,
+        "Verifier":"c91b3f22fa52721f73c8b9ea6d37d944ec44de50"
+    }'
+
+3) Transaction Data Querying: 
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/TransactionStats \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "UserId":3
+    }'
+
+4) Leaderboard Score Posting: 
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/ScorePost \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "UserId":5,
+        "LeaderboardId": 1,
+        "Score": 78
+    }'
+
+5) Leaderboard Get: 
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/LeaderboardGet \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "UserId":4,
+        "LeaderboardId": 1,
+        "Offset": 1,
+        "Limit": 10
+    }'
+
+6) User Save: 
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/UserSave \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "UserId": 1,
+        "Data": {
+            "Piece1": {
+                "SubData": 1234,
+                "SubData2": "abcd"
+            },
+            "Piece2": {
+                "SubData": {
+                    "SubSubData": 5678
+                }
+            }
+        }
+    }'
+
+7) User Load:
+    curl -X POST \
+    https://iugo-ted.herokuapp.com/UserLoad \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "UserId": 1
+    }'
+
+8) Data Reset: 
+    curl -X POST https://iugo-ted.herokuapp.com/ResetData
+
+    
