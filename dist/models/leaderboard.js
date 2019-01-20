@@ -17,6 +17,7 @@ var Leaderboard = new _mongoose2.default.Schema({
 });
 
 // unique index UserId and LeaderboardId
+/* eslint-disable no-const-assign */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 Leaderboard.index({ UserId: 1, LeaderboardId: 1 }, { unique: true });
@@ -32,15 +33,19 @@ Leaderboard.statics.CreateOrUpdate = async function (UserId, LeaderboardId, Scor
 Leaderboard.statics.GetData = async function (LeaderboardId, UserId) {
 
     var doc = await this.findOne({ LeaderboardId: LeaderboardId, UserId: UserId });
-    var n = await this.find({ LeaderboardId: LeaderboardId, Score: { $gt: doc.Score } }).count(); // This is the number of documents with a higher score
-    var ranking = n + 1; // ranking is nexts
+    var resultData = {};
+    // console.log(doc,doc.length)
+    if (doc !== null) {
+        var n = await this.find({ LeaderboardId: LeaderboardId, Score: { $gt: doc.Score } }).count(); // This is the number of documents with a higher score
+        var ranking = n + 1; // ranking is nexts
 
-    var resultData = {
-        "UserId": doc.UserId,
-        "LeaderboardId": doc.LeaderboardId,
-        "Score": doc.Score,
-        "Rank": ranking
-    };
+        resultData = {
+            "UserId": doc.UserId,
+            "LeaderboardId": doc.LeaderboardId,
+            "Score": doc.Score,
+            "Rank": ranking
+        };
+    }
 
     return resultData;
 };
@@ -57,17 +62,19 @@ Leaderboard.statics.GetEnties = async function (LeaderboardId, UserId, Offset, L
 
     var doc = await this.find({ LeaderboardId: LeaderboardId }).sort({ Score: -1 }).skip(Offset).limit(Limit);
 
-    for (var i = 0; i < doc.length; i++) {
-        var n = await this.find({ LeaderboardId: LeaderboardId, Score: { $gt: doc[i].Score } }).count(); // This is the number of documents with a higher score
-        var ranking = n + 1; // ranking is nexts
+    if (doc !== null) {
+        for (var i = 0; i < doc.length; i++) {
+            var n = await this.find({ LeaderboardId: LeaderboardId, Score: { $gt: doc[i].Score } }).count(); // This is the number of documents with a higher score
+            var ranking = n + 1; // ranking is nexts
 
-        var entryData = {
-            "UserId": doc[i].UserId,
-            "Score": doc[i].Score,
-            "Rank": ranking
-        };
+            var entryData = {
+                "UserId": doc[i].UserId,
+                "Score": doc[i].Score,
+                "Rank": ranking
+            };
 
-        resultData.Entries.push(entryData);
+            resultData.Entries.push(entryData);
+        }
     }
 
     return resultData;
