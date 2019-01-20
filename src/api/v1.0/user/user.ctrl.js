@@ -56,7 +56,7 @@ exports.UserLoad = async (ctx) => {
     const {UserId} = body;
     // get user
     const user =  await User.Load(UserId);
-    console.log(user)
+    // console.log(user)
 
     // return Success
     response.successWithData(ctx, user);

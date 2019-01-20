@@ -33,4 +33,16 @@ Leaderboard.statics.GetData = async function(LeaderboardId, UserId) {
     return resultData
 }
 
+
+// GetEnties
+// eslint-disable-next-line no-unused-vars
+Leaderboard.statics.GetEnties = async function(LeaderboardId, UserId, Offset, Limit) {
+    
+    // call Leaderboard.GetData
+
+    // Get Entries with for each
+
+    // return resultData
+}
+
 export default mongoose.model('Leaderboard', Leaderboard)

@@ -1,126 +1,221 @@
-import { expect, should } from 'chai';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+import { expect } from 'chai';
 import supertest from 'supertest';
+import should from 'should';
 import app from '../src';
 
-const temp = {};
+// const temp = {};
 const request = supertest.agent(app.listen());
-should();
 
-describe('POST api/authenticate', () => {
-  it('should get all cities', done => {
+describe('GET /Timestamp', () => {
+  it('should get timestamp', done => {
     request
-      .post('/api/authenticate')
+      .get('/Timestamp')
+      .set('Accept', 'application/json')
+      .expect(200, () => {
+        done();
+      });
+  });
+});
+
+// success transaction record
+describe('POST /Transaction', () => {
+  it('should add transaction record', done => {
+    request
+      .post('/Transaction')
       .set('Accept', 'application/json')
       .send({
-        password: 'password'
+        "TransactionId":201,
+        "UserId":3,
+        "CurrencyAmount":4,
+        "Verifier":"c91b3f22fa52721f73c8b9ea6d37d944ec44de50"
       })
       .expect(200, (err, res) => {
-        temp.token = res.body.token;
+        should(res.body.Success).equal(true);
         done();
       });
   });
 });
 
-describe('POST /city', () => {
-  it('should add a city', done => {
+// fail transaction record with invlaid verifier
+describe('POST /Transaction', () => {
+  it('should add transaction record', done => {
     request
-      .post('/api/cities')
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${temp.token}`)
+      .post('/Transaction')
       .set('Accept', 'application/json')
       .send({
-        name: 'Bangkok',
-        totalPopulation: 8249117,
-        country: 'Thailand',
-        zipCode: 1200
+        "TransactionId":200,
+        "UserId":3,
+        "CurrencyAmount":4,
+        "Verifier":"c91b3f22fa52721f73c8b9ea6d37d944ec44de50"
       })
-      .expect(200, (err, res) => {
-        temp.idCity = res.body._id;
+      .expect(400, (err, res) => {
+        should(res.body.ErrorMessage).equal('invalid Verifier')
         done();
       });
   });
 });
 
-describe('GET /cities', () => {
-  it('should get all cities', done => {
+// success transaction data query
+describe('POST /TransactionStats', () => {
+  it('should get transaction record', done => {
     request
-      .get('/api/cities')
-      .set('Authorization', `Bearer ${temp.token}`)
-      .set('Accept', 'application/json')
-      .expect(200, (err, res) => {
-        expect(res.body.length).to.be.at.least(1);
-        done();
-      });
-  });
-});
-
-describe('GET /cities/:id', () => {
-  it('should get a city', done => {
-    request
-      .get(`/api/cities/${temp.idCity}`)
-      .set('Authorization', `Bearer ${temp.token}`)
-      .set('Accept', 'application/json')
-      .expect(200, (err, res) => {
-        res.body.name.should.equal('Bangkok');
-        res.body.totalPopulation.should.equal(8249117);
-        res.body.country.should.equal('Thailand');
-        res.body.zipCode.should.equal(1200);
-        res.body._id.should.equal(temp.idCity);
-        done();
-      });
-  });
-});
-
-describe('PUT /cities', () => {
-  it('should update a city', done => {
-    request
-      .put(`/api/cities/${temp.idCity}`)
-      .set('Authorization', `Bearer ${temp.token}`)
+      .post('/TransactionStats')
       .set('Accept', 'application/json')
       .send({
-        name: 'Chiang Mai',
-        totalPopulation: 148477,
-        country: 'Thailand',
-        zipCode: 50000
+        "UserId":3
       })
       .expect(200, (err, res) => {
-        temp.idCity = res.body._id;
-        done();
-      });
-  });
-
-  it('should get updated city', done => {
-    request
-      .get(`/api/cities/${temp.idCity}`)
-      .set('Authorization', `Bearer ${temp.token}`)
-      .set('Accept', 'application/json')
-      .expect(200, (err, res) => {
-        res.body.name.should.equal('Chiang Mai');
-        res.body.totalPopulation.should.equal(148477);
-        res.body.country.should.equal('Thailand');
-        res.body.zipCode.should.equal(50000);
-        res.body._id.should.equal(temp.idCity);
+        should(res.body.TransactionCount).equal(1);
         done();
       });
   });
 });
 
-describe('DELETE /cities', () => {
-  it('should delete a city', done => {
+// fail transaction data query
+describe('POST /TransactionStats', () => {
+  it('should get transaction record', done => {
     request
-      .delete(`/api/cities/${temp.idCity}`)
-      .set('Authorization', `Bearer ${temp.token}`)
+      .post('/TransactionStats')
       .set('Accept', 'application/json')
-      .expect(200, (err, res) => {
+      .send({
+        "UserId":4
+      })
+      .expect(400, (err, res) => {
+        should(res.body.ErrorMessage).equal('Not exists UserId');
         done();
       });
   });
+});
 
-  it('should get error', done => {
+// success leaderboard score post
+describe('POST /ScorePost', () => {
+  it('should add score and get a score post', done => {
     request
-      .get(`/api/cities/${temp.idCity}`)
+      .post('/ScorePost')
       .set('Accept', 'application/json')
-      .expect(404, () => {
+      .send({
+        "UserId":3,
+        "LeaderboardId": 1,
+        "Score": 40
+      })
+      .expect(200, (err, res) => {
+        should(res.body.Score).equal(40);
+        should(res.body.Rank).equal(1);
+        done();
+      });
+  });
+});
+
+// success leaderboard score post
+describe('POST /ScorePost', () => {
+  it('should add score and get a score post', done => {
+    request
+      .post('/ScorePost')
+      .set('Accept', 'application/json')
+      .send({
+        "UserId":5,
+        "LeaderboardId": 1,
+        "Score": 100
+      })
+      .expect(200, (err, res) => {
+        should(res.body.Score).equal(100);
+        should(res.body.Rank).equal(1); // check changed rank
+        done();
+      });
+  });
+});
+
+// success user save
+describe('POST /UserSave', () => {
+  it('should add user', done => {
+    request
+      .post('/UserSave')
+      .set('Accept', 'application/json')
+      .send({
+        "UserId": 1,
+        "Data": {
+            "Piece1": {
+                "SubData": 1234,
+                "SubData2": "abcd"
+            },
+            "Piece2": {
+                "SubData": {
+                    "SubSubData": 5678
+                }
+            }
+        }
+    })
+      .expect(200, (err, res) => {
+        should(res.body.Success).equal(true);
+        done();
+      });
+  });
+});
+
+
+// success user save
+describe('POST /UserSave', () => {
+  it('should add user', done => {
+    request
+      .post('/UserSave')
+      .set('Accept', 'application/json')
+      .send({
+        "UserId": 1,
+        "Data": {
+            "Piece1": {
+                "SubData": 1234,
+                "SubData2": "abcd"
+            },
+            "Piece2": {
+                "SubData": {
+                    "SubSubData": 5678
+                }
+            }
+        }
+    })
+      .expect(200, (err, res) => {
+        should(res.body.Success).equal(true);
+        done();
+      });
+  });
+});
+
+// success user save
+describe('POST /UserSave', () => {
+  it('should update user', done => {
+    request
+      .post('/UserSave')
+      .set('Accept', 'application/json')
+      .send({
+        "UserId": 1,
+        "Data": {
+            "Piece2": {
+                "SubData": {
+                    "SubSubData": 9999
+                }
+            }
+        }
+    })
+      .expect(200, (err, res) => {
+        should(res.body.Success).equal(true);
+        done();
+      });
+  });
+});
+
+// success user load
+describe('POST /UserLoad', () => {
+  it('should get UserLoad', done => {
+    request
+      .post('/UserLoad')
+      .set('Accept', 'application/json')
+      .send({
+        "UserId":1
+      })
+      .expect(200, (err, res) => {
+        should(res.body.Piece2.SubData.SubSubData).equal(9999);
         done();
       });
   });
