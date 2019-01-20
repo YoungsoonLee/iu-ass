@@ -50,7 +50,7 @@ User.statics.Save = async function(UserId, Data) {
 // Get Rank of UserId 
 User.statics.Load = async function(UserId) {
     
-    const doc = await this.collection.findOne({UserId}); 
+    const doc = await this.findOne({UserId}); 
     // let resultData = {}
     if (doc) {
         return doc.Data

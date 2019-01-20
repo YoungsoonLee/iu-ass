@@ -29,17 +29,9 @@ exports.successWithData = (ctx, resultData) => {
             "CurrencySum": resultData[0].CurrencySum
           }
           break;
-        case '/ScorePost':
-          // code block
-          ctx.body = resultData
-          break;
-        case '/UserLoad':
-          // code block
-          ctx.body = resultData
-          break;
         default:
           // code block
-          ctx.body = {}
+          ctx.body = resultData
       }
     
 }

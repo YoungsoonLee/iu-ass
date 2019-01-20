@@ -8,7 +8,7 @@ const Transaction = new mongoose.Schema({
 
 // check TransactionId count
 Transaction.statics.CountByTransactionId = function (TransactionId, cb) {
-    return this.collection.count({TransactionId}, cb);
+    return this.count({TransactionId}, cb);
 };
 
 
